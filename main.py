@@ -14,7 +14,6 @@ def check_iban(iban):
 
 def get_fours(iban_list):
     set_of_fours = ''
-    list_length = len(iban_list)
 
     for x in range(0, 4, 1):
         set_of_fours += iban_list[x]
@@ -22,26 +21,35 @@ def get_fours(iban_list):
     return set_of_fours
 
 
-valid = False
+def build_split_iban(iban_list):
+    split_iban = ''
 
-while not valid:
-    iban = check_iban(input())
+    for x in range(0, 9):
+        if len(iban_list) < 4:
+            split_iban += ''.join(iban_list)
+            break
 
+        split_iban += get_fours(iban_list)
+        del iban_list[:4]
 
-if len(iban) > 34:
-    print('IBAN is too long. An IBAN has a maximum length of 34 characters.')
+        if x == 8:
+            break
+        else:
+            split_iban += ' '
 
-iban_list = list(iban)
-split_iban = ''
-
-for x in range(0, 9):
-    split_iban += get_fours(iban_list)
-    del iban_list[:4]
-
-    if x == 8:
-        break
-    else:
-        split_iban += ' '
+    return split_iban
 
 
-print(split_iban)
+def main():
+    valid = False
+    iban = ''
+
+    while not valid:
+        iban = input()
+        valid = check_iban(iban)
+
+    print(build_split_iban(list(iban)))
+
+
+if __name__ == '__main__':
+    main()
