@@ -1,3 +1,7 @@
+import pyperclip
+import os
+
+
 def check_iban(iban):
     if not iban:
         print('IBAN is none. Please type something')
@@ -44,11 +48,17 @@ def main():
     valid = False
     iban = ''
 
+    print('Please input the IBAN you want to split.')
+
     while not valid:
         iban = input()
         valid = check_iban(iban)
 
-    print(build_split_iban(list(iban)))
+    result = build_split_iban(list(iban))
+
+    pyperclip.copy(result)
+    print(f'Here is your result: {result}. It has been copied into your clipboard.')
+    os.system('pause')
 
 
 if __name__ == '__main__':
