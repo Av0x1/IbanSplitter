@@ -1,10 +1,20 @@
 import os
 import pyperclip
 import sqlite3
+import sys
+
+
+def get_resource_path(relative_path):
+    if getattr(sys, 'frozen', False):
+        base_path = os.path.dirname(sys.executable)
+    else:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def get_country_name(abbreviation):
-    conn = sqlite3.connect('iban_splitter.db')
+    conn = sqlite3.connect(get_resource_path('iban_splitter.db'))
     c = conn.cursor()
     c.execute(f"SELECT country_name FROM country WHERE abbreviation = '{abbreviation}'")
     country_name = c.fetchone()
@@ -48,6 +58,9 @@ def build_split_iban(iban_list):
         del iban_list[:4]
 
         if x == 8:
+            break
+        if not iban_list:
+            split_iban += ''
             break
         else:
             split_iban += ' '
