@@ -33,6 +33,9 @@ def check_iban(iban):
     elif iban[0].isdigit() or iban[1].isdigit():
         print('IBAN is invalid. The first two characters in an IBAN need to be alphabetical characters.')
         return False
+    elif ' ' in iban:
+        print('Input must not contain spaces and must be a single "word".')
+        return False
     else:
         return True
 
