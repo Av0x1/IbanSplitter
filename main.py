@@ -1,6 +1,16 @@
 import os
 import pyperclip
-import sqlite3 as sl
+import sqlite3
+
+
+def get_country_name(abbreviation):
+    conn = sqlite3.connect('iban_splitter.db')
+    c = conn.cursor()
+    c.execute(f"SELECT country_name FROM country WHERE abbreviation = '{abbreviation}'")
+    country_name = c.fetchone()
+    conn.close()
+
+    return country_name[0]
 
 
 def check_iban(iban):
@@ -55,9 +65,11 @@ def main():
         iban = input()
         valid = check_iban(iban)
 
+    country_name = get_country_name(iban[:2])
     result = build_split_iban(list(iban))
 
     pyperclip.copy(result)
+    print(f'The IBAN is from the following country: {country_name}.')
     print(f'Here is your result: {result}. It has been copied into your clipboard.')
     os.system('pause')
 
